@@ -4,100 +4,113 @@ import { Page, expect, Locator } from '@playwright/test';
  * Reusable UI Action Helpers
  * Industry-standard helper functions for Playwright UI automation
  */
+export class UIActions {
+  readonly page: Page;
 
-/** Login to eAmata admin portal */
-export async function login(page: Page, email: string, password: string): Promise<void> {
-  await page.getByLabel('Email').fill(email);
-  await page.getByLabel('Password').fill(password);
-  await page.getByRole('button', { name: /log\s*in/i }).click();
-  await page.waitForLoadState('networkidle');
-}
+  constructor(page: Page) {
+    this.page = page;
+  }
 
-/** Navigate to a module via sidebar/menu */
-export async function navigateToModule(page: Page, moduleName: string): Promise<void> {
-  await page.getByRole('link', { name: moduleName }).click();
-  await page.waitForLoadState('networkidle');
-}
+  /** Login to eAmata admin portal */
+  async login(email: string, password: string): Promise<void> {
+    await this.page.getByLabel('Email').fill(email);
+    await this.page.getByLabel('Password').fill(password);
+    await this.page.getByRole('button', { name: /log\s*in/i }).click();
+    await this.page.waitForLoadState('networkidle');
+  }
 
-/** Select value from a dropdown */
-export async function selectDropdown(page: Page, label: string, value: string): Promise<void> {
-  await page.getByLabel(label).click();
-  await page.getByRole('option', { name: value }).click();
-}
+  /** Navigate to a module via sidebar/menu */
+  async navigateToModule(moduleName: string): Promise<void> {
+    await this.page.getByRole('link', { name: moduleName }).click();
+    await this.page.waitForLoadState('networkidle');
+  }
 
-/** Search for a record in list/table */
-export async function searchRecord(page: Page, searchTerm: string): Promise<void> {
-  const searchInput = page.getByPlaceholder(/search/i);
-  await searchInput.clear();
-  await searchInput.fill(searchTerm);
-  await page.waitForLoadState('networkidle');
-}
+  /** Select value from a dropdown */
+  async selectDropdown(label: string, value: string): Promise<void> {
+    await this.page.getByLabel(label).click();
+    await this.page.getByRole('option', { name: value }).click();
+  }
 
-/** Wait for a toast notification */
-export async function waitForToast(page: Page, message?: string): Promise<Locator> {
-  const toast = message
-    ? page.getByText(message)
-    : page.locator('[role="alert"], .toast, .Toastify__toast');
-  await expect(toast.first()).toBeVisible({ timeout: 10000 });
-  return toast.first();
-}
+  /** Search for a record in list/table */
+  async searchRecord(searchTerm: string): Promise<void> {
+    const searchInput = this.page.getByPlaceholder(/search/i);
+    await searchInput.clear();
+    await searchInput.fill(searchTerm);
+    await this.page.waitForLoadState('networkidle');
+  }
 
-/** Click save and wait for response */
-export async function saveForm(page: Page): Promise<void> {
-  await page.getByRole('button', { name: /save/i }).click();
-  await page.waitForLoadState('networkidle');
-}
+  /** Wait for a toast notification */
+  async waitForToast(message?: string): Promise<Locator> {
+    const toast = message
+      ? this.page.getByText(message)
+      : this.page.locator('[role="alert"], .toast, .Toastify__toast');
+    await expect(toast.first()).toBeVisible({ timeout: 10000 });
+    return toast.first();
+  }
 
-/** Delete a record with confirmation */
-export async function deleteRecord(page: Page, identifier: string): Promise<void> {
-  await page.getByText(identifier).click();
-  await page.getByRole('button', { name: /delete/i }).click();
-  // Confirm delete dialog
-  await page.getByRole('button', { name: /confirm|yes|ok/i }).click();
-  await page.waitForLoadState('networkidle');
-}
+  /** Click save and wait for response */
+  async saveForm(): Promise<void> {
+    await this.page.getByRole('button', { name: /save/i }).click();
+    await this.page.waitForLoadState('networkidle');
+  }
 
-/** Fill a date field */
-export async function fillDateField(page: Page, label: string, date: string): Promise<void> {
-  const dateInput = page.getByLabel(label);
-  await dateInput.clear();
-  await dateInput.fill(date);
-}
+  /** Delete a record with confirmation */
+  async deleteRecord(identifier: string): Promise<void> {
+    await this.page.getByText(identifier).click();
+    await this.page.getByRole('button', { name: /delete/i }).click();
+    // Confirm delete dialog
+    await this.page.getByRole('button', { name: /confirm|yes|ok/i }).click();
+    await this.page.waitForLoadState('networkidle');
+  }
 
-/** Upload a file */
-export async function uploadFile(page: Page, label: string, filePath: string): Promise<void> {
-  const fileInput = page.getByLabel(label);
-  await fileInput.setInputFiles(filePath);
-}
+  /** Fill a date field */
+  async fillDateField(label: string, date: string): Promise<void> {
+    const dateInput = this.page.getByLabel(label);
+    await dateInput.clear();
+    await dateInput.fill(date);
+  }
 
-/** Assert a row exists in a table */
-export async function assertTableRowExists(page: Page, text: string): Promise<void> {
-  await expect(page.getByRole('row', { name: new RegExp(text, 'i') })).toBeVisible();
-}
+  /** Upload a file */
+  async uploadFile(label: string, filePath: string): Promise<void> {
+    const fileInput = this.page.getByLabel(label);
+    await fileInput.setInputFiles(filePath);
+  }
 
-/** Get row count in a table */
-export async function getTableRowCount(page: Page): Promise<number> {
-  const rows = page.getByRole('row');
-  return await rows.count() - 1; // subtract header row
-}
+  /** Assert a row exists in a table */
+  async assertTableRowExists(text: string): Promise<void> {
+    await expect(this.page.getByRole('row', { name: new RegExp(text, 'i') })).toBeVisible();
+  }
 
-/** Clear a field and type new value */
-export async function clearAndType(page: Page, locator: Locator, text: string): Promise<void> {
-  await locator.clear();
-  await locator.fill(text);
-}
+  /** Get row count in a table */
+  async getTableRowCount(): Promise<number> {
+    const rows = this.page.getByRole('row');
+    return await rows.count() - 1; // subtract header row
+  }
 
-/** Wait for page URL to contain expected path */
-export async function waitForNavigation(page: Page, urlPath: string): Promise<void> {
-  await page.waitForURL(`**/${urlPath}**`, { timeout: 15000 });
-}
+  /** Clear a field and type new value */
+  async clearAndType(locator: Locator, text: string): Promise<void> {
+    await locator.clear();
+    await locator.fill(text);
+  }
 
-/** Assert error message is visible */
-export async function assertErrorMessage(page: Page, message: string): Promise<void> {
-  await expect(page.getByText(message, { exact: false })).toBeVisible({ timeout: 5000 });
-}
+  /** Wait for page URL to contain expected path */
+  async waitForNavigation(urlPath: string): Promise<void> {
+    await this.page.waitForURL(`**/${urlPath}**`, { timeout: 15000 });
+  }
 
-/** Assert current URL contains path */
-export async function assertUrl(page: Page, path: string): Promise<void> {
-  await expect(page).toHaveURL(new RegExp(path));
+  /** Assert error message is visible */
+  async assertErrorMessage(message: string): Promise<void> {
+    await expect(this.page.getByText(message, { exact: false })).toBeVisible({ timeout: 5000 });
+  }
+
+  /** Assert current URL contains path */
+  async assertUrl(path: string): Promise<void> {
+    await expect(this.page).toHaveURL(new RegExp(path));
+  }
+
+  /** Generic click with logging */
+  async click(locator: Locator, description: string): Promise<void> {
+    console.log(`Clicking ${description}`);
+    await locator.click();
+  }
 }
