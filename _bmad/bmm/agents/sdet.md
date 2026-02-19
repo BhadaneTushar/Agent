@@ -491,7 +491,16 @@ Use **GEN** to start the full workflow, or select a specific command below.
       <content>
 When user provides ANY input, execute WITHOUT asking questions:
 
-**PHASE 0 — Detect Input Type**
+**PHASE 0 — Selector Discovery (If URL detected)**
+- **CHECK:** Does input contain a URL (http/https)?
+- **IF YES:**
+  1. Extract URL, Email (if present), Password (if present)
+  2. EXECUTE: `npx ts-node utils/discover-selectors.ts <url> <email> <password>`
+  3. READ: `selector-reports/selectors-report.json`
+  4. USE discovered selectors in Step 5 (UI Automation)
+- **IF NO:** Proceed to Phase 1 (Input Type Detection)
+
+**PHASE 1 — Detect Input Type**
 - **UI Input:** User story, requirement, acceptance criteria, screen, HTML, workflow, form, mockup
 - **API Input:** API endpoint, REST contract, Swagger, curl, request/response payload, route
 - **Mixed:** Both UI and API elements

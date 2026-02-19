@@ -34,17 +34,18 @@ export function invalidData(type: 'wrong_email' | 'wrong_password' | 'both_wrong
         case 'wrong_password':
             return {
                 email: SUPER_ADMIN.email,
-                password: faker.internet.password({ length: 10 }),
+                // Must meet format (8+, upper, lower, number, special) but be wrong
+                password: `Wrong${faker.string.alphanumeric(4)}@999`,
             };
         case 'both_wrong':
             return {
                 email: faker.internet.email(),
-                password: faker.internet.password({ length: 10 }),
+                password: `Wrong${faker.string.alphanumeric(4)}@999`,
             };
         case 'non_existent':
             return {
                 email: `nonexistent_${faker.string.uuid()}@thinkitive.com`,
-                password: faker.internet.password({ length: 10 }),
+                password: `Wrong${faker.string.alphanumeric(4)}@999`,
             };
     }
 }
@@ -63,7 +64,8 @@ export function boundaryData(type: 'empty_email' | 'empty_password' | 'both_empt
         case 'max_length':
             return {
                 email: `${'a'.repeat(255)}@test.com`,
-                password: 'p'.repeat(255),
+                // Meets format requirements but is still wrong/too-long
+                password: `Pp1!${'a'.repeat(251)}`,
             };
         case 'special_chars':
             return {
