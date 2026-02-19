@@ -6,3 +6,12 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Local/AI
+.claude/
+.cursor/
+
+# Reports & Logs
+selector-reports/
+*.log
+.env

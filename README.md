@@ -17,12 +17,10 @@ A production-grade **Playwright + TypeScript** test automation framework for the
 
 ---
 
-## Overview
-
-This framework provides end-to-end UI and API test automation for the **eAmata** healthcare administration platform. It follows industry best practices including:
+This framework provides end-to-end UI test automation for the **eAmata** healthcare administration platform. It follows industry best practices including:
 
 - ✅ **Page Object Model (POM)** design pattern
-- ✅ **Reusable helper utilities** for UI and API interactions
+- ✅ **Reusable helper utilities** for UI interactions
 - ✅ **Faker-based test data generation** with healthcare-specific generators
 - ✅ **Risk-based test prioritization** (P0–P3) for healthcare compliance
 - ✅ **Full traceability** from acceptance criteria → scenarios → test files
@@ -34,7 +32,7 @@ This framework provides end-to-end UI and API test automation for the **eAmata**
 
 | Technology | Purpose |
 |-----------|---------|
-| [Playwright](https://playwright.dev/) | Browser automation & API testing |
+| [Playwright](https://playwright.dev/) | Browser automation |
 | [TypeScript](https://www.typescriptlang.org/) | Type-safe test development |
 | [@faker-js/faker](https://fakerjs.dev/) | Dynamic test data generation |
 | [BMAD Framework](https://github.com/bmad-method) | AI agent orchestration |
@@ -48,13 +46,11 @@ eAmataPlaywright/
 ├── pages/                    # Page Object Models
 │   └── LoginPage.ts          # Login page interactions & assertions
 ├── tests/                    # Test specifications
-│   ├── login.spec.ts         # Super Admin login tests (23 cases)
-│   └── example.spec.ts       # Playwright example tests
+│   └── login.spec.ts         # Super Admin login tests (23 cases)
 ├── test-data/                # Test data factories
 │   └── login.data.ts         # Login test data (valid, invalid, boundary, malformed)
 ├── utils/                    # Reusable utilities
-│   ├── ui-actions.ts         # UI interaction helpers (login, navigate, dropdown, etc.)
-│   └── api-helpers.ts        # API request helpers (auth context, CRUD operations)
+│   └── ui-actions.ts         # UI interaction helpers (login, navigate, dropdown, etc.)
 ├── _bmad/                    # BMAD agent configuration
 │   └── bmm/agents/sdet.md    # Tushar SDET Agent definition
 ├── playwright.config.ts      # Playwright configuration
@@ -124,9 +120,7 @@ npx playwright show-report
 
 ---
 
-## 🎯 Tushar SDET Agent
-
-**Tushar** is an AI-powered Senior SDET agent built on the BMAD framework. It follows a **structured 6-step QA workflow** to generate production-ready test automation:
+**Tushar** is an AI-powered Senior SDET agent built on the BMAD framework. It follows a **structured 5-step QA workflow** to generate production-ready test automation:
 
 ```
 Step 1 → Validate Requirements        (flag gaps, assign AC IDs)
@@ -134,7 +128,6 @@ Step 2 → Design Test Scenarios         (risk-based priority P0–P3)
 Step 3 → Make Automation Decisions     (automate vs manual)
 Step 4 → Plan Test Data               (scan existing, generate with Faker)
 Step 5 → Generate Playwright UI Tests  (POM + reusable helpers)
-Step 6 → Generate Playwright API Tests (request context + auth)
 ```
 
 ### Agent Capabilities
@@ -144,7 +137,6 @@ Step 6 → Generate Playwright API Tests (request context + auth)
 | `GEN` | Smart Generate — full 6-step workflow |
 | `SC` | Scenarios + Automation Decision |
 | `UI` | Playwright UI tests only |
-| `API` | Playwright API tests only |
 | `TD` | Faker-based test data generator |
 | `SD` | Selector discovery & recommendation |
 | `CG` | Coverage gap analysis |
@@ -184,7 +176,6 @@ export class LoginPage {
 Common operations are centralized in `utils/`:
 
 - **`ui-actions.ts`** — login, navigate, dropdown, search, toast, save, delete, date picker, file upload
-- **`api-helpers.ts`** — auth context, GET/POST/PUT/DELETE, status & body assertions
 
 ### Test Data Factory
 
