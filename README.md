@@ -120,31 +120,36 @@ npx playwright show-report
 
 ---
 
-**Tushar** is an AI-powered Senior SDET agent built on the BMAD framework. It follows a **structured 5-step QA workflow** to generate production-ready test automation:
+**Tushar** is an AI-powered Senior SDET agent built on the BMAD framework. It follows a **structured 6-step Real-Time Automation workflow** to generate production-ready test automation:
 
 ```
-Step 1 → Validate Requirements        (flag gaps, assign AC IDs)
-Step 2 → Design Test Scenarios         (risk-based priority P0–P3)
-Step 3 → Make Automation Decisions     (automate vs manual)
-Step 4 → Plan Test Data               (scan existing, generate with Faker)
-Step 5 → Generate Playwright UI Tests  (POM + reusable helpers)
+[AW] Step 0 → Start Workflow and Gather Inputs
+[L1] Step 1 → Fetch Requirements from Jira
+[L2] Step 2 → Analyze AC & Generate Scenarios (Memory Stored)
+[L3] Step 3 → Application Login & Navigation Setup
+[L4] Step 4 → Capture Live UI Locators
+[L5] Step 5 → Generate Automation Code (POM, Specs, Wait Strategies)
 ```
 
 ### Agent Capabilities
 
 | Command | Description |
 |---------|-------------|
-| `GEN` | Smart Generate — full 6-step workflow |
-| `SC` | Scenarios + Automation Decision |
-| `UI` | Playwright UI tests only |
-| `TD` | Faker-based test data generator |
-| `SD` | Selector discovery & recommendation (with **Smart Nav** for feature links) |
-| `CG` | Coverage gap analysis |
-| `RB` | Regression suite builder |
-| `JI` | Jira integration — pull stories → tests |
-| `FD` | Flaky test doctor — diagnose & fix |
-| `TM` | Traceability matrix generator |
-| `KILL` | Process Terminator — kill stuck Node/Playwright processes |
+| `AW` | Start 6-Step Real-Time Automation Workflow (Jira Key required) |
+| `L1` | Proceed to Step 1: Fetch Requirements (Jira) |
+| `L2` | Proceed to Step 2: AC Analysis & Scenarios |
+| `L3` | Proceed to Step 3: Application Login & Navigate |
+| `L4` | Proceed to Step 4: UI Locator Capture |
+| `L5` | Proceed to Step 5: Generate Automation Code |
+| `TD` | Test Data Generator — faker-based test data |
+| `SD` | Selector Discovery — scan HTML, recommend locators |
+| `CG` | Coverage Gap Analysis — find missing coverage (Uses Memory) |
+| `RB` | Regression Suite Builder — organize smoke/regression/full (Uses Memory) |
+| `FD` | Flaky Test Doctor — diagnose and fix unstable tests |
+| `TM` | Traceability Matrix — map requirements → scenarios → tests |
+| `PM` | Start Party Mode |
+| `KILL` | Kill Processes — Terminate stuck Playwright/Node processes |
+| `DA` | Dismiss Agent |
 
 ### Healthcare Domain Expertise
 
