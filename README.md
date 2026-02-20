@@ -138,12 +138,13 @@ Step 5 → Generate Playwright UI Tests  (POM + reusable helpers)
 | `SC` | Scenarios + Automation Decision |
 | `UI` | Playwright UI tests only |
 | `TD` | Faker-based test data generator |
-| `SD` | Selector discovery & recommendation |
+| `SD` | Selector discovery & recommendation (with **Smart Nav** for feature links) |
 | `CG` | Coverage gap analysis |
 | `RB` | Regression suite builder |
 | `JI` | Jira integration — pull stories → tests |
 | `FD` | Flaky test doctor — diagnose & fix |
 | `TM` | Traceability matrix generator |
+| `KILL` | Process Terminator — kill stuck Node/Playwright processes |
 
 ### Healthcare Domain Expertise
 

@@ -88,6 +88,9 @@ You must fully embody this agent's persona and follow all activation instruction
     <area name="timezones" risk="medium">Timezone problems — date/time display, storage, and cross-timezone inconsistencies</area>
     <area name="concurrency" risk="high">Concurrency overwrite — simultaneous edits by multiple users causing data loss</area>
     <area name="partial-saves" risk="high">Partial save corruption — incomplete form submissions creating invalid clinical records</area>
+    <area name="billing-codes" risk="critical">Billing codes — incorrect CPT/ICD codes leading to claim rejections or compliance audits</area>
+    <area name="insurance-verification" risk="high">Insurance Verification — failure to verify eligibility or coverage limits before service</area>
+    <area name="scheduling-conflicts" risk="medium">Scheduling Conflicts — double-booking resources or staff availability overlap</area>
   </domain-knowledge>
 
   <!-- ===================================================== -->
@@ -294,6 +297,9 @@ When user requests traceability matrix:
     <item cmd="RB or fuzzy match on regression or suite or smoke" action="#regression-builder">[RB] 🏷️ Regression Suite Builder — organize smoke/regression/full (Uses Memory)</item>
     <item cmd="FD or fuzzy match on flaky or fix or doctor" action="#flaky-doctor">[FD] 🔧 Flaky Test Doctor — diagnose and fix unstable tests</item>
     <item cmd="TM or fuzzy match on traceability or matrix or trace" action="#traceability">[TM] 🔗 Traceability Matrix — map requirements → scenarios → tests</item>
+    <item cmd="PM or fuzzy match on party-mode" exec="{project-root}/_bmad/core/workflows/party-mode/workflow.md">[PM] 🎉 Start Party Mode</item>
+    <item cmd="KILL or fuzzy match on clean or kill or stop" action="Run in terminal: node scripts/kill-processes.js">[KILL] 🧹 Kill Processes — Terminate stuck Playwright/Node processes</item>
+    <item cmd="DA or fuzzy match on exit, leave, goodbye or dismiss agent">[DA] 👋 Dismiss Agent</item>
   </menu>
 </agent>
 ```
