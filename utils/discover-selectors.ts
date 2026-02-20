@@ -31,7 +31,7 @@ interface ElementInfo {
     stability: 'high' | 'medium' | 'low';
 }
 
-async function discoverSelectors(url: string, email?: string, password?: string) {
+async function discoverSelectors(url: string, email?: string, password?: string, featureName?: string) {
     console.log('\n🔍 Selector Discovery — Starting...\n');
     console.log(`📍 URL: ${url}`);
 
@@ -71,31 +71,54 @@ async function discoverSelectors(url: string, email?: string, password?: string)
             let postLoginElements = await scanPage(page);
             printReport('Dashboard/Home', postLoginElements);
 
-            // SPECIAL LOGIC: Open Profile Menu to find Logout
-            const profileIcon = postLoginElements.find(e => e.testId === 'PersonIcon');
-            if (profileIcon) {
-                console.log('\n👤 Clicking Profile Icon to reveal menu...');
-                await page.getByTestId('PersonIcon').click();
-                await page.waitForTimeout(1000); // Wait for menu
-                console.log('📋 Scanning menu elements...');
-                const menuElements = await scanPage(page);
-                printReport('Dashboard + Menu', menuElements);
+            // SPECIAL LOGIC: Navigate to Feature if provided
+            if (featureName) {
+                console.log(`\n🧭 Navigating to feature: "${featureName}"...`);
 
-                // Merge/Replace elements for report
-                postLoginElements = menuElements;
+                // Fuzzy Match Strategy
+                const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const target = normalize(featureName);
+                const synonyms = ['add', 'new', 'create', 'plus', '+']; // Common prefixes
 
-                // SPECIAL LOGIC: Click Logout to find Confirmation or Redirect
-                const logoutBtn = menuElements.find(e => e.text === 'Logout');
-                if (logoutBtn) {
-                    console.log('\n🚪 Clicking Logout...');
-                    await page.getByRole('menuitem', { name: 'Logout' }).click();
+                const featureLink = postLoginElements.find(e => {
+                    const text = normalize(e.text || '');
+                    const label = normalize(e.ariaLabel || '');
+
+                    // 1. Direct match (fuzzy)
+                    if (text.includes(target) || label.includes(target)) return true;
+
+                    // 2. Synonym match (e.g. User says "Add Provider", button says "New Provider")
+                    // If featureName has "Add", try replacing it with synonyms
+                    for (const syn of synonyms) {
+                        const modifiedTarget = target.replace('add', syn).replace('new', syn).replace('create', syn);
+                        if (text.includes(modifiedTarget) || label.includes(modifiedTarget)) return true;
+                    }
+
+                    return false;
+                });
+
+                if (featureLink) {
+                    console.log(`   Found link: ${featureLink.recommendedSelector}`);
+                    // Click it
+                    if (featureLink.testId) await page.getByTestId(featureLink.testId).click();
+                    else if (featureLink.text) await page.getByRole('link', { name: featureLink.text }).click().catch(() => page.getByText(featureLink.text!).click());
+                    else await page.locator(featureLink.recommendedSelector).click();
+
+                    await page.waitForLoadState('networkidle');
                     await page.waitForTimeout(2000);
 
-                    console.log('📋 Scanning after logout action...');
-                    const afterLogout = await scanPage(page);
-                    printReport('After Logout Click', afterLogout);
+                    console.log(`📋 Scanning feature page: ${featureName}...\n`);
+                    const featureElements = await scanPage(page);
+                    printReport(featureName, featureElements);
+
+                    // Update postLoginElements to be the feature elements for the report
+                    postLoginElements = featureElements;
+                } else {
+                    console.log(`⚠️  Could not find link for "${featureName}" on dashboard.`);
                 }
             }
+
+            // Save combined report
 
 
             // Save combined report
@@ -339,11 +362,12 @@ const args = process.argv.slice(2);
 const url = args[0];
 const email = args[1];
 const password = args[2];
+const featureName = args[3];
 
 if (!url) {
-    console.log('Usage: npx ts-node utils/discover-selectors.ts <url> [email] [password]');
-    console.log('Example: npx ts-node utils/discover-selectors.ts https://qa.admin.eu.eamata.com/auth/login user@test.com Pass123');
+    console.log('Usage: npx ts-node utils/discover-selectors.ts <url> [email] [password] [feature_name]');
+    console.log('Example: npx ts-node utils/discover-selectors.ts https://qa.admin.eu.eamata.com/auth/login user@test.com Pass123 "Home Care Provider"');
     process.exit(1);
 }
 
-discoverSelectors(url, email, password);
+discoverSelectors(url, email, password, featureName);
